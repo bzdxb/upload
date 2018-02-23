@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>上传插件编写</title>
+    <script src="js/jquery.min.js"></script>
+    <script src="layer/layer.js"></script>
+    <script src="js/upload.min.js"></script>
+</head>
+<body>
+<div>
+    <a href="javascript:;" id="upload">上传</a>
+</div>
+<div>
+    <a href="javascript:;" id="images">图片上传</a>
+    <div class="image"></div>
+</div>
+<div>
+    <a href="javascript:;" id="size">上传大小限制</a>
+</div>
+</body>
+<script>
+    upload.ajaxUpload("upload",{"model":'layer'});
+    upload.ajaxUpload("images",{
+        name:'image',//上传文件名称，默认为files
+        files:'image',//上传按钮id，默认为files
+        defExt:['jpg','png','gif'],//允许上传文件类型，默认不限制
+        model:'layer',//弹出框类型，默认为window（使用第三方弹出框时需要引入相关js文件）
+        url:"/api/upload.php",//上传文件处理地址
+        //上传成功回调函数
+        success:function (d) {
+            if(typeof d != "object") d = eval("("+d+")");
+            if(d.code == 1){
+                $(".image").append('<img src="'+d.data+'" width="120">');
+            }else{
+                layer.msg(d.msg);
+            }
+        }
+    });
+    upload.ajaxUpload("size",{
+        defSize:2,//上传文件大小，默认不限制（单位：Kb）
+        model:"layer"
+    });
+</script>
+</html>
